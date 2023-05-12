@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html ng-app="App">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela Principal</title>
+    <script src="./lib/angular/angular.js"></script>
+    <link rel="stylesheet" href="./lib/css/styles.css">
+    <link rel="stylesheet" href="./lib/bootstrap/bootstrap.css">
+</head>
+
+<body ng-controller="LoginController">
+    <div class="container">
+        <h3 class="text-center custom-h3">Criar Conta</h3>
+        <form name="UserForm" ng-submit="register()" novalidate>
+
+            <div class="justify-content-center mx-1 mb-1">
+                <div class="required-input">
+                    <input type="text" class="form-control" id="codigo" placeholder="Nome" ng-model="user.Nome" required>
+                    <span class="required-marker"></span>
+                </div>
+            </div>
+            <div class="justify-content-center mx-1 mb-1">
+                <div class="required-input">
+                    <input type="password" class="form-control" id="Nome" placeholder="Senha" ng-model="user.Senha" required>
+                    <span class="required-marker"></span>
+                </div>
+            </div>
+            <div class="justify-content-center mx-1 mb-1">
+                <div class="required-input">
+                    <input type="text" class="form-control" id="cpf" placeholder="CPF" ng-model="user.CPF" required>
+                    <span class="required-marker"></span>
+                </div>
+            </div>
+            <div class="justify-content-center mx-1 mb-1">
+                <input type="text" class="form-control" id="endereco" placeholder="Endereço" ng-model="user.Endereco">
+            </div>
+            <div class="justify-content-center mx-1 mb-1">
+                <input type="text" class="form-control" id="telefone" placeholder="Telefone" ng-model="user.Telefone">
+            </div>
+            <div class="justify-content-center mx-1 mt-1">
+                <button type="submit" class="btn btn-success btn-block">Criar Conta</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+      var app = angular.module('App', []);
+      app.controller('LoginController', function($scope, $http) {
+        $scope.user = {};
+        $scope.register = function() {
+          if ($scope.UserForm.$valid) {
+            $http.post('https://localhost:7057/api/Usuario/registro', $scope.user)
+              .then(function(response) {
+                return $http.get('https://localhost:7057/api/Usuario/cpf?cpf=' + $scope.user.CPF);
+              })
+              .then(function(response) {
+                var id = response.data.id;
+                var cpf = response.data.cpf.substring(0, 4) + "*".repeat(response.data.cpf.length - 4);
+                alert("Pessoa cadastrada com sucesso, código: " + id + " CPF: " + cpf);
+              })
+            }
+          }
+      })
+    </script>
+    
+</body>
+</html>

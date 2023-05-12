@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html ng-app="App">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela Principal</title>
+    <script src="./lib/angular/angular.js"></script>
+    <link rel="stylesheet" href="./lib/css/styles.css">
+    <link rel="stylesheet" href="./lib/bootstrap/bootstrap.css">
+</head>
+
+<body ng-controller="LoginController">
+    <div class="sidebar">
+        <form name="UserForm" ng-submit="login()" novalidate>
+            <h4 class="text-center texto-login">Efetuar Login</h4>
+            <div class="justify-content-center mx-2 mb-1">
+                <input type="text" class="form-control custom-input" id="Nome" name="Nome" placeholder="Usuário" ng-model="user.Nome" required>
+            </div>
+            <div class="justify-content-center mx-2 mb-1">
+                <input type="password" class="form-control custom-input" id="Senha" name="Senha" placeholder="Senha" ng-model="user.Senha" required>
+            </div>
+            <div class="justify-content-center mx-2 mt-1">
+                <button type="submit" class="btn btn-success btn-block custom-button">Login</button>
+            </div>
+            <div class="text-center mt-1">
+                <a href="cadastro.html" class="cadastro" style="text-decoration: underline;">Criar uma conta</a>
+            </div>
+        </form>
+    </div>
+    <script>
+        var app = angular.module('App', []);
+        app.controller('LoginController', function($scope, $http) {
+            $scope.user = {};
+            $scope.login = function() {
+                $http.post('https://localhost:7057/api/Usuario/autenticar', $scope.user)
+                    .then(function(response) {
+                        alert("Conectado com sucesso!");
+                    })
+                    .catch(function(error) {
+                        alert("Usuário ou senha incorretos!");
+                    });
+            };
+        });
+    </script>    
+</body>
+</html>
